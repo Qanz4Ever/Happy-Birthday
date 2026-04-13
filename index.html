@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>kado untuk asyarotul fera fatika 💕</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(circle at 10% 30%, #fff0f5, #ffe0e7);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .floating-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .floating-bg span {
+      position: absolute;
+      font-size: 1.2rem;
+      opacity: 0.3;
+      animation: float 12s infinite linear;
+    }
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.4; }
+      90% { opacity: 0.4; }
+      100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+    }
+
+    .page {
+      display: none;
+      min-height: 100vh;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 1.5rem;
+      position: relative;
+      z-index: 2;
+      animation: fadeIn 0.4s ease;
+    }
+    .active {
+      display: flex;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .card {
+      background: rgba(255, 250, 245, 0.85);
+      backdrop-filter: blur(18px);
+      border-radius: 2rem;
+      padding: 2rem 1.5rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.6);
+      width: 100%;
+      max-width: 480px;
+      transition: all 0.3s;
+      text-align: center;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 1.9rem;
+      color: #c55a7f;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.3px;
+    }
+
+    p, .text {
+      color: #4a3b3f;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    button {
+      background: #f3a0b7;
+      border: none;
+      padding: 0.8rem 1.8rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      font-size: 1rem;
+      color: white;
+      cursor: pointer;
+      transition: all 0.25s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      margin-top: 1.2rem;
+      width: fit-content;
+    }
+    button:hover {
+      background: #e684a2;
+      transform: scale(1.02);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+    }
+
+    .pin-container {
+      margin: 1rem 0;
+    }
+    .pin-dots {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .pin-dot {
+      width: 3rem;
+      height: 3rem;
+      background: #fce4ec;
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #c55a7f;
+      transition: all 0.2s;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05), 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .pin-dot.filled {
+      background: #f8b0c5;
+      color: white;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+      transform: scale(1.02);
+    }
+    .pin-dot.empty {
+      background: #fff0f3;
+      color: #d9a7b8;
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.8rem;
+      max-width: 260px;
+      margin: 1rem auto;
+    }
+    .key {
+      background: white;
+      border-radius: 3rem;
+      padding: 0.8rem;
+      text-align: center;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #b9476b;
+      cursor: pointer;
+      transition: 0.1s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .key:active { transform: scale(0.96); background: #ffe3ec; }
+    .pin-message {
+      font-size: 0.8rem;
+      margin-top: 0.8rem;
+      opacity: 0.75;
+      transition: 0.2s;
+    }
+    .pin-message.error {
+      color: #d96c8c;
+      opacity: 1;
+    }
+    .subtle-warning {
+      font-size: 0.7rem;
+      color: #b98f9b;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    #gameArea {
+      position: relative;
+      width: 100%;
+      height: 55vh;
+      background: rgba(255, 235, 240, 0.4);
+      border-radius: 2rem;
+      margin-top: 1rem;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+    .heart {
+      position: absolute;
+      font-size: 2.2rem;
+      cursor: pointer;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+      transition: 0.05s linear;
+      animation: dropHeart 2.8s linear forwards;
+    }
+    @keyframes dropHeart {
+      0% { top: -15%; transform: rotate(0deg); }
+      100% { top: 115%; transform: rotate(15deg); }
+    }
+    .score-text {
+      font-weight: bold;
+      background: #ffd9e4;
+      display: inline-block;
+      padding: 0.2rem 1rem;
+      border-radius: 2rem;
+      margin: 0.5rem 0;
+    }
+
+    #winPopup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(8px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .win-box {
+      background: #fffafc;
+      padding: 2rem;
+      border-radius: 2rem;
+      max-width: 85%;
+      text-align: center;
+      animation: bouncePop 0.4s cubic-bezier(0.34,1.2,0.64,1);
+    }
+    @keyframes bouncePop {
+      0% { transform: scale(0.7); opacity: 0; }
+      80% { transform: scale(1.03); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .slider-container {
+      position: relative;
+      margin: 1rem 0;
+      border-radius: 1.5rem;
+      overflow: hidden;
+    }
+    .slide {
+      display: none;
+      text-align: center;
+    }
+    .slide img {
+      width: 100%;
+      max-width: 280px;
+      height: auto;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      border-radius: 1.5rem;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+      border: 3px solid rgba(255,255,240,0.8);
+    }
+    .slide.active-slide {
+      display: block;
+      animation: slideFade 0.5s ease;
+    }
+    @keyframes slideFade {
+      from { opacity: 0; transform: translateX(12px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .music-card {
+      background: rgba(255, 240, 245, 0.8);
+      border-radius: 1.2rem;
+      padding: 0.4rem;
+      margin: 1rem 0;
+    }
+    iframe {
+      border-radius: 1rem;
+    }
+
+    #letter {
+      font-size: 0.95rem;
+      text-align: left;
+      background: rgba(255, 245, 245, 0.7);
+      padding: 1rem;
+      border-radius: 1.2rem;
+      margin-top: 1rem;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+
+    footer {
+      font-size: 0.7rem;
+      margin-top: 1rem;
+      opacity: 0.6;
+    }
+
+    @media (max-width: 500px) {
+      .card { padding: 1.5rem; }
+      h1 { font-size: 1.6rem; }
+      .heart { font-size: 1.9rem; }
+      .key { font-size: 1.4rem; padding: 0.6rem; }
+      .pin-dot { width: 2.4rem; height: 2.4rem; font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="floating-bg" id="floatingHearts"></div>
+
+<div class="page active" id="loading">
+  <div class="card">
+    <h1 id="loadingText"></h1>
+    <p style="margin-top: 12px;">✨ untuk asyarotul fera fatika ✨</p>
+  </div>
+</div>
+
+<div class="page" id="pinPage">
+  <div class="card">
+    <h1>🌸 masukkan kode rahasia 🌸</h1>
+    <div class="pin-container">
+      <div class="pin-dots" id="pinDots">
+        <div class="pin-dot empty">●</div>
+        <div class="pin-dot empty">●</div>
+        <div class="pin-dot empty">●</div>
+        <div class="pin-dot empty">●</div>
+        <div class="pin-dot empty">●</div>
+        <div class="pin-dot empty">●</div>
+      </div>
+    </div>
+    <div class="keypad" id="keypad">
+      <div class="key">1</div><div class="key">2</div><div class="key">3</div>
+      <div class="key">4</div><div class="key">5</div><div class="key">6</div>
+      <div class="key">7</div><div class="key">8</div><div class="key">9</div>
+      <div></div><div class="key">0</div><div></div>
+    </div>
+    <div id="pinMessage" class="pin-message"></div>
+    <div class="subtle-warning" id="hintText"></div>
+  </div>
+</div>
+
+<div class="page" id="gamePage">
+  <div class="card">
+    <h1>🍬 tangkap 5 hati</h1>
+    <p>klik hati yang jatuh 💕</p>
+    <p class="score-text">❤️ nilai: <span id="score">0</span> / 5</p>
+    <div id="gameArea"></div>
+  </div>
+</div>
+
+<div id="winPopup">
+  <div class="win-box">
+    <h1>🎀 kamu menang 🎀</h1>
+    <p style="margin: 12px 0;">hatimu berhasil kuambil lagi... 💘</p>
+    <button id="openGiftBtn">🎁 buka hadiah</button>
+  </div>
+</div>
+
+<div class="page" id="birthdayPage">
+  <div class="card">
+    <h1>🎂 selamat ulang tahun, asyarotul fera fatika 🎂</h1>
+    <div id="letter"></div>
+    <button id="toMemoryBtn">📸 lanjut ke kenangan →</button>
+  </div>
+</div>
+
+<div class="page" id="memoryPage">
+  <div class="card">
+    <h1>🍃 kenangan manis kita 🍃</h1>
+    <div class="slider-container">
+      <div class="slide"><img src="https://i.ibb.co.com/TM8PPgZS/IMG-20260412-WA0029.jpg" alt="kenangan 1" loading="lazy"></div>
+      <div class="slide"><img src="https://i.ibb.co.com/5XyGwSVy/IMG-20260412-WA0028.jpg" alt="kenangan 2" loading="lazy"></div>
+      <div class="slide"><img src="https://i.ibb.co.com/1tvkWwFt/IMG-20260412-WA0027.jpg" alt="kenangan 3" loading="lazy"></div>
+      <div class="slide"><img src="https://i.ibb.co.com/bgYgNv1q/IMG-20260412-WA0026.jpg" alt="kenangan 4" loading="lazy"></div>
+      <div class="slide"><img src="https://i.ibb.co.com/2dgGP23c/IMG-20260412-WA0025.jpg" alt="kenangan 5" loading="lazy"></div>
+    </div>
+    <button id="toMusicBtn">🎵 selanjutnya →</button>
+  </div>
+</div>
+
+<div class="page" id="musicPage">
+  <div class="card">
+    <h1>🎧 lagu spesial untukmu</h1>
+    <div class="music-card">
+      <iframe src="https://open.spotify.com/embed/track/6tIoXcKI2qpMsXCdFP3Gi0?utm_source=generator" width="100%" height="80" frameborder="0" allow="encrypted-media"></iframe>
+    </div>
+    <div class="music-card">
+      <iframe src="https://open.spotify.com/embed/track/5XeFesFbtLpXzIVDNQP22n?utm_source=generator" width="100%" height="80" frameborder="0" allow="encrypted-media"></iframe>
+    </div>
+    <div class="music-card">
+      <iframe src="https://open.spotify.com/embed/track/3vkCueOmm7xQDoJ17W1Pm3?utm_source=generator" width="100%" height="80" frameborder="0" allow="encrypted-media"></iframe>
+    </div>
+    <footer>untuk asyarotul fera fatika dengan cinta 💌</footer>
+  </div>
+</div>
+
+<script>
+  (function() {
+    function createFloating() {
+      const container = document.getElementById('floatingHearts');
+      if(!container) return;
+      for (let i = 0; i < 28; i++) {
+        let span = document.createElement('span');
+        span.innerHTML = ['🌸','💕','💗','✨','🎀','🌸'][Math.floor(Math.random()*6)];
+        span.style.left = Math.random() * 100 + '%';
+        span.style.fontSize = (Math.random() * 20 + 14) + 'px';
+        span.style.animationDuration = (Math.random() * 10 + 8) + 's';
+        span.style.animationDelay = Math.random() * 15 + 's';
+        container.appendChild(span);
+      }
+    }
+    createFloating();
+
+    function goToPage(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+    }
+
+    let loadingIndex = 0;
+    const loadingMsg = "menyiapkan kejutan manis untukmu... 🍰💌";
+    const loadingEl = document.getElementById('loadingText');
+    function typeLoading() {
+      if (loadingIndex < loadingMsg.length) {
+        loadingEl.innerHTML += loadingMsg[loadingIndex];
+        loadingIndex++;
+        setTimeout(typeLoading, 45);
+      } else {
+        setTimeout(() => goToPage('pinPage'), 1100);
+      }
+    }
+    typeLoading();
+
+    let pinInput = "";
+    const correctPin = "140406";
+    const pinMsgDiv = document.getElementById('pinMessage');
+    const hintDiv = document.getElementById('hintText');
+    const pinDots = document.querySelectorAll('.pin-dot');
+    
+    hintDiv.innerText = "💬 kode: hari & tanggal ulang tahun (ddmmyy)";
+    
+    function updatePinDots() {
+      for (let i = 0; i < pinDots.length; i++) {
+        if (i < pinInput.length) {
+          pinDots[i].classList.add('filled');
+          pinDots[i].classList.remove('empty');
+          pinDots[i].innerText = "●";
+        } else {
+          pinDots[i].classList.add('empty');
+          pinDots[i].classList.remove('filled');
+          pinDots[i].innerText = "○";
+        }
+      }
+    }
+    
+    document.querySelectorAll('.key').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        if (pinInput.length >= 6) return;
+        const digit = btn.innerText;
+        if (!isNaN(digit)) {
+          pinInput += digit;
+          updatePinDots();
+          if (pinInput.length === 6) {
+            if (pinInput === correctPin) {
+              pinMsgDiv.innerText = "✓ benar! mengalihkan...";
+              pinMsgDiv.classList.remove('error');
+              setTimeout(() => startGameAndReset(), 500);
+            } else {
+              pinMsgDiv.innerText = "✿ kode salah, coba lagi ya ✿";
+              pinMsgDiv.classList.add('error');
+              hintDiv.style.opacity = "0.85";
+              hintDiv.innerText = "💭 petunjuk: 14 april 2006 → 140406";
+              pinInput = "";
+              updatePinDots();
+              setTimeout(() => {
+                pinMsgDiv.innerText = "";
+                pinMsgDiv.classList.remove('error');
+              }, 1500);
+            }
+          }
+        }
+      });
+    });
+
+    let currentScore = 0;
+    let targetScore = 5;
+    let heartInterval = null;
+    let gameActive = false;
+
+    function stopHeartSpawn() {
+      if (heartInterval) {
+        clearInterval(heartInterval);
+        heartInterval = null;
+      }
+    }
+
+    function clearGameArea() {
+      const area = document.getElementById('gameArea');
+      if (area) area.innerHTML = '';
+    }
+
+    function spawnHearts() {
+      const gameArea = document.getElementById('gameArea');
+      if (!gameArea) return;
+      stopHeartSpawn();
+      heartInterval = setInterval(() => {
+        const isGamePageActive = document.getElementById('gamePage').classList.contains('active');
+        if (!isGamePageActive || currentScore >= targetScore) {
+          if (currentScore >= targetScore) return;
+          if (!isGamePageActive) stopHeartSpawn();
+          return;
+        }
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.innerHTML = '💗';
+        heart.style.left = Math.random() * 85 + '%';
+        heart.style.fontSize = (Math.random() * 12 + 24) + 'px';
+        heart.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (currentScore >= targetScore) return;
+          currentScore++;
+          document.getElementById('score').innerText = currentScore;
+          heart.remove();
+          if (currentScore >= targetScore) {
+            stopHeartSpawn();
+            document.getElementById('winPopup').style.display = 'flex';
+            gameActive = false;
+          }
+        });
+        gameArea.appendChild(heart);
+        setTimeout(() => { if(heart && heart.parentNode) heart.remove(); }, 2800);
+      }, 700);
+    }
+
+    function startGameAndReset() {
+      stopHeartSpawn();
+      clearGameArea();
+      currentScore = 0;
+      document.getElementById('score').innerText = currentScore;
+      gameActive = true;
+      goToPage('gamePage');
+      spawnHearts();
+    }
+
+    document.getElementById('openGiftBtn')?.addEventListener('click', () => {
+      document.getElementById('winPopup').style.display = 'none';
+      goToPage('birthdayPage');
+      startLetterTyping();
+    });
+
+    const fullLetter = `hai sayangku, asyarotul fera fatika yang paling manis 💗
+
+hari ini adalah hari yang istimewa karena kamu lahir ke dunia. terima kasih telah menjadi cahaya dalam hidupku. setiap tawamu adalah melodi terindah.
+
+aku bersyukur bisa mengenalmu, mencintaimu, dan merayakan hari istimewamu. semoga semua impianmu perlahan menjadi nyata, dan semoga kebahagiaan selalu menemanimu.
+
+selamat ulang tahun, cintaku. kamu pantas mendapatkan segala hal yang indah. 💕
+
+- seseorang yang menyayangimu dengan sepenuh hati.`;
+
+    let letterInterval = null;
+    function startLetterTyping() {
+      const letterDiv = document.getElementById('letter');
+      if (!letterDiv) return;
+      if (letterInterval) clearInterval(letterInterval);
+      letterDiv.innerHTML = '';
+      let idx = 0;
+      function typeChar() {
+        if (idx < fullLetter.length) {
+          letterDiv.innerHTML += fullLetter[idx];
+          idx++;
+          letterInterval = setTimeout(typeChar, 28);
+        } else {
+          clearTimeout(letterInterval);
+        }
+      }
+      typeChar();
+    }
+
+    let slideIndex = 0;
+    let slides = [];
+    let autoSlideTimer = null;
+
+    function initSlides() {
+      slides = Array.from(document.querySelectorAll('.slide'));
+      if (slides.length === 0) return;
+      slides.forEach((slide, idx) => {
+        slide.classList.remove('active-slide');
+        if (idx === 0) slide.classList.add('active-slide');
+      });
+      slideIndex = 0;
+      if (autoSlideTimer) clearInterval(autoSlideTimer);
+      autoSlideTimer = setInterval(() => {
+        const memoryPage = document.getElementById('memoryPage');
+        if (!memoryPage.classList.contains('active')) return;
+        if (!slides.length) return;
+        slides[slideIndex].classList.remove('active-slide');
+        slideIndex = (slideIndex + 1) % slides.length;
+        slides[slideIndex].classList.add('active-slide');
+      }, 2800);
+    }
+
+    document.getElementById('toMemoryBtn')?.addEventListener('click', () => {
+      goToPage('memoryPage');
+      if (autoSlideTimer) clearInterval(autoSlideTimer);
+      initSlides();
+    });
+    
+    document.getElementById('toMusicBtn')?.addEventListener('click', () => {
+      goToPage('musicPage');
+    });
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mut) => {
+        if (mut.target.id === 'memoryPage' && mut.target.classList.contains('active')) {
+          if (slides.length === 0) initSlides();
+          else {
+            slides.forEach(s => s.classList.remove('active-slide'));
+            slideIndex = 0;
+            if(slides[0]) slides[0].classList.add('active-slide');
+            if (autoSlideTimer) clearInterval(autoSlideTimer);
+            autoSlideTimer = setInterval(() => {
+              if (document.getElementById('memoryPage').classList.contains('active') && slides.length) {
+                slides[slideIndex].classList.remove('active-slide');
+                slideIndex = (slideIndex + 1) % slides.length;
+                slides[slideIndex].classList.add('active-slide');
+              }
+            }, 2800);
+          }
+        }
+      });
+    });
+    observer.observe(document.body, { attributes: true, subtree: false, attributeFilter: ['class'] });
+
+    function fixImages() {
+      const allImgs = document.querySelectorAll('img');
+      allImgs.forEach(img => {
+        img.addEventListener('error', function() {
+          this.src = 'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20200%20200%22%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20fill%3D%22%23ffe0e7%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20text-anchor%3D%22middle%22%20dy%3D%22.3em%22%20fill%3D%22%23c55a7f%22%20font-size%3D%2230%22%3E💗%3C%2Ftext%3E%3C%2Fsvg%3E';
+          this.style.objectFit = 'cover';
+        });
+      });
+    }
+    fixImages();
+
+    window.addEventListener('beforeunload', () => {
+      if (heartInterval) clearInterval(heartInterval);
+    });
+
+    const gamePageWatcher = new MutationObserver(() => {
+      const gamePage = document.getElementById('gamePage');
+      if (!gamePage.classList.contains('active')) {
+        if (heartInterval) stopHeartSpawn();
+      } else {
+        if (currentScore < targetScore && !heartInterval && gameActive) {
+          spawnHearts();
+        }
+      }
+    });
+    gamePageWatcher.observe(document.getElementById('gamePage'), { attributes: true, attributeFilter: ['class'] });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initSlides();
+    });
+    
+    const style = document.createElement('style');
+    style.textContent = `img { background: #ffecf0; }`;
+    document.head.appendChild(style);
+  })();
+</script>
+</body>
+</html>
